@@ -1,0 +1,15 @@
+El proyecto esta construdio con Vue.js, las conexiones con los puntos finales
+se encuentran en la carpeta database '/public/database', los datos se conectan localmente
+en archivos Json.
+
+Para corre elaplicativo es necesario instalar la Api Vue UI 
+que se encuntra en esta dirección o bien ejecutar dentro de la terminal 
+"npm run serve", para ejecutar un servidor local.
+
+
+Para el daesarrollo de las vista utilice una libria llamada Vuetify,
+basada en componentes de material Ui, las conexiones a los archivos json 
+se hacen atarves de la libreria axios, un cliente Http que recive promesas,
+para el manejo de la información de manera global utilizo Vuex, guardo los datosde 
+manera global para consumir los en otros componentes, las graficas estan cisntruidas
+con Chart.js 

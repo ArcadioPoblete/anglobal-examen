@@ -1,0 +1,18 @@
+{
+  "accounts":[
+    {
+      "account"  : 123456789,
+      "money" : {
+        "currency" : "€",
+        "value"    : "500"
+      }
+    },
+    {
+      "account"  : 987654321,
+      "money"  : {
+        "currency" : "$",
+        "value"    : "3000"
+      }
+    }
+  ]
+}
