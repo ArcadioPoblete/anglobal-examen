@@ -13,7 +13,7 @@
         <v-col cols="4" md="4" lg="3" xl="4">
           <v-card>
             <v-card-text>
-              <Chart v-if="loaded" :chardata="charData" :options="options" ></Chart>
+               <apexchart width="500" type="pie" :options="options" :series="options.series"></apexchart>
             </v-card-text>
             <v-divider></v-divider>
             <v-card-text>
@@ -52,33 +52,20 @@ export default {
   data: () => ({
     loaded: false,
     userName: '',
+    loaded: false,
     options: {
-      responsive: true,
-      maintainAspectRatio: true
-    }
+        chart: {
+          id: 'vuechart-example'
+        },
+        series: [],
+        labels: []
+      }
   }),
   created (){
   },
   mounted (){
     this.loaded = true
-
-
-      let cuenta01 = this.$store.state.transacciones.filter(item =>   item.fromAccount == 123456789)
-      let monto01 = cuenta01.map(item => {return  parseInt(item.amount.value )})
-
-      let cuenta02 = this.$store.state.transacciones.filter(item =>   item.fromAccount == 987654321)
-      let monto02 = cuenta02.map(item => {return  parseInt(item.amount.value )})
-      
-      let total01 = 0
-      let total02 = 0
-
-      for(let i of monto01) total01 += i
-      for(let e of monto02) total02 += e
-    
-
-      this.$store.state.monto01 = total01
-      this.$store.state.monto02 = total02
-
+       this.options.series = [this.$store.state.cuentaA,this.$store.state.cuentaB]
 
         this.charData = {
           labels: ['CUENTA: ****6789', 'CUENTA: ****4321'],

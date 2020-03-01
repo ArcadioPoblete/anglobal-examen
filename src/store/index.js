@@ -20,11 +20,8 @@ export default new Vuex.Store({
     options: [],
     tabla01: [],
     tabla02: [],
-    monto01: '',
-    monto02: '',
-    cuentaVaul01: '',
-    cuentaVaul02: '',
-    newAmount01: '',
+    cuentaA: '',
+    cuentaB: ''
   },
   mutations: {
     alert(state){

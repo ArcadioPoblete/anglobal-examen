@@ -4,7 +4,7 @@
     <v-col cols="6" md="12" lg="12" xl="6">
         <v-card>
             <v-card-title>
-                Cuenta: ****6789  Total: {{  $store.state.monto01 }}
+                Cuenta: ****6789  Total: {{ this.$store.state.cuentaA }}
             </v-card-title>
             <v-card-text>
                 <v-simple-table>
@@ -35,7 +35,7 @@
     <v-col cols="6" md="12" lg="12" xl="6">
         <v-card>
             <v-card-title>
-                Cuenta: ****4321 Total: {{  $store.state.monto02 }}
+                Cuenta: ****4321 Total: {{  this.$store.state.cuentaB }}
             </v-card-title>
             <v-card-text>
                 <v-simple-table>
@@ -68,9 +68,10 @@
 export default {
     name: 'TablaCuentas',
     data: () => ({
-
+        dataTable: [],
     }),
     created(){
+            
     ///////////// Grupo de tablas
         let cuenta01 = this.$store.state.transacciones.filter( item => item.fromAccount == 123456789)
         let cuenta02 = this.$store.state.transacciones.filter( item => item.fromAccount == 987654321)
