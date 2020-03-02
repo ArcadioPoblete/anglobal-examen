@@ -14,7 +14,8 @@ para el manejo de la información de manera global utilizo Vuex, guardo los dato
 manera global para consumir los en otros componentes, las graficas estan cisntruidas
 con Apex-cahrt.js 
 
-Para ejecutar el prollecto hay que ejecutar en consola 'npm run serve' estando dentro de la carpeta del proyecto
+Para ejecutar el prollecto hay que ejecutar en consola 'npm run serve' estando 
+dentro de la carpeta del proyecto
 ```
 
 ### Customize configuration
