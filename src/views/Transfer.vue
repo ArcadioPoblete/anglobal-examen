@@ -1,7 +1,7 @@
 <template>
   <div>
     <Header/>
-    <v-container class="mt-10">
+    <v-container class="mt-12">
       <v-row>
         <v-col cols="4" md="4" lg="4" xl="4">
              <v-card>
@@ -19,10 +19,12 @@
                         <v-col cols="12" class="pb-0">
                           <v-select  :items="select" label="Accounts" v-model="$store.state.transfer.fromAccount"></v-select>
                         </v-col> 
+                        
                         <!-- Destino -->
                         <v-col cols="12" class="pt-0 pb-0">
                           <v-text-field  label="Destination account"  counter="8" maxlength="8" v-model="$store.state.transfer.toAccount"></v-text-field>
                         </v-col>
+                        
                         <!-- Monto a transferir -->
                         <v-col cols="12" class="pt-0 pb-0">
                           <v-text-field label="Amount" v-model="$store.state.transfer.amount.value"></v-text-field>
@@ -47,12 +49,13 @@
                     {{ alert.text }}
                     <v-btn  text @click="alert.active = false">Close</v-btn>
                 </v-snackbar>
+
             </v-card>
         </v-col>
         
         <!-- Componente grafica --------------->
-        <v-col cols="8" md="8" lg="8" xl="8" class="d-flex justify-center">
-          <apexchart width="500" type="pie" :options="options" :series="options.series"></apexchart>
+        <v-col cols="12" md="8" lg="8" xl="8" class="d-flex justify-center align-center">
+          <char-pie></char-pie>
         </v-col>
         <!-- Componente grafica --------------->
 
@@ -65,28 +68,22 @@
 <script>
 import Header from '../components/Header'
 import Tabla from '../components/Tabla'
-import Chart from '../components/Chart02'
+import charPie from '../components/Chart'
 
 export default {
   data: () => ({
     select: [],
+    monto: '',
     alert:{
       active: false,
       color: '',
       text: ''
     },
     loaded: false,
-    options: {
-        chart: {
-          id: 'vuechart-example'
-        },
-        series: [],
-        labels: []
-      }
   }),
   created (){
 
-//////////// Cuentas
+  //////////// Cuentas
     axios.get('../database/accounts.json')
       .then(item => {
           this.$store.state.cuentas = item.data.accounts
@@ -102,30 +99,11 @@ export default {
           }
       })
 
-/////////// Obtener transacciónes
+  /////////// Obtener transacciónes
     axios.get('../database/transacctions.json')
       .then(item => {
-        this.$store.state.transacciones = item.data.transactions
-        
-
-        ///// Total de la cuenta 123456789
-        this.$store.state.cuentaA = item.data.transactions
-            .filter(item => item.fromAccount ==  123456789)
-            .reduce((total, item) => {
-              return total + item.amount.value
-        },0)
-
-        ///// Total de la cuenta 987654321
-        this.$store.state.cuentaB = item.data.transactions
-            .filter(item => item.fromAccount ==  987654321)
-            .reduce((total, item) => {
-              return total + item.amount.value
-        },0)
-
-        this.options.series = [this.$store.state.cuentaA,this.$store.state.cuentaB]
-        
-//////  Agrupar cuentas
         let datos = item.data.transactions
+       
         let grupos = datos.reduce((cont, item) => {  
               cont[item.fromAccount] = cont[item.fromAccount] || []
               cont[item.fromAccount].push(item)
@@ -134,39 +112,36 @@ export default {
           console.log(err)
       })
   },
-  mounted () {
-///////// Limpia el formulario 
-      this.$refs.formTransfer.reset()         
-  },
   methods: {
-
 ////////// Agregar datos a las tablas  
       newTransfer(){
-      
+
       ///////////// Modelo de datos
-          let dataTransfer = {
+        let newItem = {
                 fromAccount: this.$store.state.transfer.fromAccount,
                 toAccount: this.$store.state.transfer.toAccount,
                 amount: {
                   currency: '',
                   value: this.$store.state.transfer.amount.value
                 },
-            sentAt: Date()
+                sentAt: Date()
           }
-          
-      ////////// Validación de los datos del formulario
+
+      ////////// Validación de la cuenta
           if(this.$store.state.transfer.fromAccount == null){
               
               this.alert.active = true
               this.alert.color = 'red darken-4'
               this.alert.text = 'El campo cuenta esta vacio'
-
+      
+      ////////// Validación del campo destino
           }else if (this.$store.state.transfer.toAccount == null){
               
               this.alert.active = true
               this.alert.color = 'red darken-4'
               this.alert.text = 'El campo destino esta vacio'
-
+      
+      ////////// Validación del monto
           }else if(this.$store.state.transfer.amount.value == null){
               
               this.alert.active = true
@@ -174,48 +149,50 @@ export default {
               this.alert.text = 'El monto esta vacio'
 
           }else {            
-
-////////// Se agregan los datos a las tablas
-
-            this.$store.state.transfer.sentAt = Date()
-
-            if(123456789 == dataTransfer.fromAccount){
-                dataTransfer.amount.currency = '€'
+      
+      ///////// Se agregan los datos a la cuenta
+            axios.get('../database/accounts.json')
+              .then(item => {
+                let datos = item.data.accounts
                 
-              this.$store.state.cuentaA = 
-                  this.$store.state.cuentaA + parseInt(dataTransfer.amount.value)
+      ///////// Se busaca el valor de la moneda
+                let cuentas = datos.reduce((acc, item) => {
+                      acc[item.account] = acc[item.account] || []
+                      acc[item.account].push(item.money.currency)
+                      return acc
+                },Object.create(null))
+      
+      ///////// Se valida que la cuenta tenga saldo sufucuente
+                let montoCuenta = datos.filter(item => item.account == newItem.fromAccount)
+                      .map(item => {
+                        return item.money.value
+                      })
 
-                if(this.$store.state.tabla01.push(dataTransfer)){
+                  if(newItem.amount.value > parseInt(montoCuenta)){
+                      this.alert.active = true
+                      this.alert.text = 'La cuenta notien sufucuente saldo'
+                      this.alert.color = 'amber darken-2'
+                  }else{
+                     
+        ////////// Si cumple con elmonto se acepta la transferencia
+                    newItem.amount.currency = String(cuentas[newItem.fromAccount])
 
-                    //Alerta exitosa
-                    this.alert.active = true
-                    this.alert.color = 'green darken-2'
-                    this.alert.text = 'El monto se agrego exitosamente'
-                    this.$refs.formTransfer.reset()  
-                } 
-                
-            }else if(987654321 == dataTransfer.fromAccount){
-                dataTransfer.amount.currency = '$'
-
-                this.$store.state.cuentaB = 
-                  this.$store.state.cuentaB + parseInt(dataTransfer.amount.value)
-                console.log(this.$store.state.cuentaB)
-
-                if(this.$store.state.tabla02.push(dataTransfer)){
-                    //Alerta exitosa
-                    this.alert.active = true
-                    this.alert.color = 'green darken-2'
-                    this.alert.text = 'El monto se agrego exitosamente'
-                    this.$refs.formTransfer.reset() 
-                }
-            }
+                    if (this.$store.state.dataTable[newItem.fromAccount].push(newItem)) {
+                      this.$refs.formTransfer.reset()
+                    }else{
+                        console.log('Ocurrio un error')
+                    }
+                  }
+                }).catch(err =>   {
+                    console.log(err)
+                })
           }
         }
   },
   components: {
     Header,
     Tabla,
-    Chart
+    charPie
   } 
 }
 </script>

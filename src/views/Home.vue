@@ -12,8 +12,10 @@
         <!-- Chart pie -->
         <v-col cols="4" md="4" lg="3" xl="4">
           <v-card>
-            <v-card-text>
-               <apexchart width="500" type="pie" :options="options" :series="options.series"></apexchart>
+            <v-card-text class="d-flex justify-center">
+                <!-- Componente grafica --------------->
+                  <char-pie></char-pie>
+                <!-- Componente grafica --------------->
             </v-card-text>
             <v-divider></v-divider>
             <v-card-text>
@@ -44,49 +46,28 @@
 
 <script>
 import Header from '../components/Header'
-import Chart from '../components/Chart02'
 import card01 from '../components/Card01'
 import card02 from '../components/CardBalane'
+import charPie from '../components/Chart'
 
 export default {
   data: () => ({
     loaded: false,
     userName: '',
     loaded: false,
-    options: {
-        chart: {
-          id: 'vuechart-example'
-        },
-        series: [],
-        labels: []
-      }
+    
   }),
   created (){
+
   },
   mounted (){
-    this.loaded = true
-       this.options.series = [this.$store.state.cuentaA,this.$store.state.cuentaB]
-
-        this.charData = {
-          labels: ['CUENTA: ****6789', 'CUENTA: ****4321'],
-          datasets: [
-            {
-              label: 'Data One',
-              backgroundColor: '#f87979',
-              data: [total01,total02],
-              backgroundColor: ['#4DB6AC','#00897B']
-            }
-          ]
-        }
-  },
-  methods: {
-
+       
   },
   components:{
     Header,
-    Chart,
     card01,
-    card02
+    card02,
+    charPie
   }
 }
 </script>

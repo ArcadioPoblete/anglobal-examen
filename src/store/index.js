@@ -5,6 +5,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    dataTable: [],
+    dataPie: [],
     transfer: {
       fromAccount: '',
       toAccount: '',
@@ -14,19 +16,13 @@ export default new Vuex.Store({
         },
       sentAt: ''
     },
+    dataSeries: [],
     getUser: '',
     cuentas: [],
     transacciones: [],
-    options: [],
-    tabla01: [],
-    tabla02: [],
-    cuentaA: '',
-    cuentaB: ''
   },
   mutations: {
-    alert(state){
-
-    }
+   
   },
   actions: {
   },

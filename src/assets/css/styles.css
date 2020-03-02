@@ -28,7 +28,7 @@
 }
 .btnNav{
     width: 130px;
-    height: 50px !important;
+    height: 100% !important;
 }
 .v-toolbar__content{
     padding-top: 0;

@@ -23,7 +23,7 @@
                                 </v-col>
                                 <!-- Boton de ingreso -->
                                 <v-col cols="8" md="10" lg="10" xl="6" offset="2" offset-md="1" offset-lg="1" offset-xl="3">
-                                        <v-btn small color="success" depressed block @click="login" :disabled="actBtn">Ingresar</v-btn>
+                                        <v-btn small color="success" depressed block @click="login"  :disabled="actBtn">Ingresar</v-btn>
                                 </v-col>
                             </v-row>
                         </v-form>
@@ -62,7 +62,7 @@ export default {
         }
     }),
     methods: {
-        //Validar el campo usuario
+////////// Validar la longitud del campo usuario
         validation(){
             //Longitud del campo usuario
             const inputUser = this.user.length
@@ -70,7 +70,7 @@ export default {
             if(inputUser){
                 this.actBtn = false
             }
-            //Alerta para  ingresar un maximo de 20 caracteres
+///////////// Alerta para  ingresar un maximo de 20 caracteres
             if (inputUser == 20){
                 this.snackbar  = true //Se activa una alerta
                 this.textAlert = 'Solo puedes ingresar solo 20 caracteres' //Texto de alerta
@@ -79,23 +79,31 @@ export default {
                 this.snackbar  = false
             }
         },
-        //Metodos de ingreso
+/////////////// Metodos de ingreso
         login(){
-            //Longitud del campo usuario
+            
+            let expresiones = /\w/
+            ///^(?!.*([A-Za-zñÑáéíóúÁÉÍÓÚ\s])\1{2}).+$/
+            ////////// Longitud del campo usuario
             const inputUser = this.user.length
 
-            //Validar que los campos esten correctos
+            /////////// Validar que los campos esten correctos
             if(this.user == ''){
                 this.actBtn = true
                 this.snackbar  = true
                 this.textAlert = 'El campo usuario es requerido'
+            
+            /////////// Validar que el campo password no este vacio
             }else if (this.password == ''){
                 this.snackbar  = true
                 this.textAlert = 'El campo password es requerido'
+            
+            /////////// Validar que el campo usuario no sea menor a 8 caracteres
             }else if(inputUser <= 8){
                 this.snackbar  = true
                 this.textAlert = 'Ingresa más de 8 caracteres'
-            }else{
+
+            }else {
 
                 this.$store.state.getUser = this.user
                 this.$router.push({path: '/home'})

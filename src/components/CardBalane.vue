@@ -12,10 +12,10 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="(item,index) in dataBalance" :key="index">
-                    <td class="text-center">****{{ String(item.account).substr(0,4) }}</td>
-                    <td class="text-center">{{ item.balance.currency }} {{ item.balance.value }}</td>
-                    <td class="text-center">{{ item.createdAt }}</td>
+                <tr v-for="(item, index) in dataBalance" :key="index">
+                    <td class="text-center">{{ item.account }}</td>
+                    <td class="text-center">{{ item.balance.currency }}{{item.balance.value}}</td>
+                    <td class="text-center">{{ item.createdAt.substr(0,10) }}</td>
                 </tr>
                 </tbody>
             </template>  
@@ -32,13 +32,13 @@ export default {
         dataBalance: []
     }),
     created(){
-
-        const urlBalance = '../database/balance.json'
-
-        axios.get(urlBalance).then( item =>{
-            this.dataBalance = item.data.balance
-        }).catch(err => {
-            console.log(err)
+/////////// Obtener transacciónes
+    axios.get('../database/balance.json')
+      .then(item => {
+        let datos = item.data.balance            
+            this.dataBalance = datos
+         }).catch(err => {
+                console.log(err)
         })
     }
 }
